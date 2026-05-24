@@ -1,32 +1,21 @@
-name: CI Pipeline
+name: Build
 
 on:
-  pull_request:
+  push:
     branches:
-      - develop
       - main
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
-  quality-check:
-
-    runs-on: ubuntu-latest
-
+  sonarqube:
+    name: SonarQube
+    runs-on: windows-latest
     steps:
-
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-
-      - name: Install Poetry
-        run: pip install poetry
-
-      - name: Install dependencies
-        run: poetry install
-
-      - name: Run Ruff
-        run: poetry run ruff check .
-
-      - name: Run Tests
-        run: poetry run pytest
+          fetch-depth: 0
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
