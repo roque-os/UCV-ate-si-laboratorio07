@@ -1,0 +1,2 @@
+processed_image:
+  type: kedro.io.MemoryDataset
